@@ -16,9 +16,11 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 }
 
 export async function dashboardLogin(email: string, password: string): Promise<{ token: string }> {
-  const result = await request<{ token: string }>('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) })
-  localStorage.setItem(TOKEN_KEY, result.token)
-  return result
+  const result = await request<{ token?: string; accessToken?: string }>('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) })
+  const token = result.token || result.accessToken || ''
+  if (!token) throw new ApiError('لم يُرجع الخادم رمز دخول صالحًا')
+  localStorage.setItem(TOKEN_KEY, token)
+  return { token }
 }
 
 export const dashboardApi = {
