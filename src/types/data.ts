@@ -1,4 +1,4 @@
-export type View = 'home' | 'results' | 'booking' | 'tracking' | 'auth'
+export type View = 'home' | 'results' | 'booking' | 'tracking' | 'auth' | 'admin-login'
 
 export type Trip = {
   id: string
@@ -69,7 +69,7 @@ export const mockTracking: TrackingResult = {
 
 export function hashToView(hash: string): View {
   const value = hash.replace('#', '')
-  if (value === 'results' || value === 'booking' || value === 'tracking' || value === 'auth' || value === 'login' || value === 'register') {
+  if (value === 'results' || value === 'booking' || value === 'tracking' || value === 'auth' || value === 'admin-login' || value === 'login' || value === 'register') {
     return value === 'login' || value === 'register' ? 'auth' : value
   }
   return 'home'
