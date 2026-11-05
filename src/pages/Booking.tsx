@@ -1,0 +1,20 @@
+import { useState } from 'react'
+import { ArrowLeft, BusFront, CalendarDays, Check, ChevronLeft, ShieldCheck } from 'lucide-react'
+import { createBooking } from '../api/client'
+import type { Trip, View } from '../types/data'
+
+type Props = { trip: Trip; from: string; to: string; date: string; notify: (message: string) => void; navigate: (view: View) => void }
+
+export function Booking({ trip, from, to, date, notify, navigate }: Props) {
+  const [seat, setSeat] = useState('A3')
+  const [terms, setTerms] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const confirm = async () => {
+    setLoading(true); setError(null)
+    try { await createBooking({ tripId: trip.backendId ?? Number(trip.id), seats: [{ seatNumber: Number(seat.replace(/\D/g, '')) || 3, passengerName: 'مسافر سيرنا', passengerPhone: '0999999999' }] }); notify('تم تأكيد حجزك بنجاح 🎉'); navigate('tracking') }
+    catch (reason) { setError(reason instanceof Error ? reason.message : 'تعذر تأكيد الحجز') }
+    finally { setLoading(false) }
+  }
+  return <div className="inner-main"><section className="page-banner booking-banner"><div className="container"><div className="breadcrumb"><a href="#results">الرحلات</a><ChevronLeft size={13} /><span>إتمام الحجز</span></div><h1>احجز مقعدك وخلّينا نهتم بالباقي</h1><p>خطوتين صغار وبتكون جاهز للرحلة.</p></div></section><div className="container booking-layout"><section className="booking-main"><div className="stepper"><span className="done"><Check size={14} /> الرحلة</span><i /><span className="current">2 <b>المقعد</b></span><i /><span>3 <b>التأكيد</b></span></div><div className="booking-panel"><div className="panel-title"><div><span className="company-logo" style={{ background: `${trip.color}18`, color: trip.color }}>{trip.logo}</span><span><b>{trip.company}</b><small>{trip.time} — {trip.arrival} · مباشرة</small></span></div><span className="date-badge"><CalendarDays size={15} /> {date}</span></div><h3>اختار مقعدك</h3><div className="seat-legend"><span><i className="seat available" /> متاح</span><span><i className="seat selected" /> اختيارك</span><span><i className="seat taken" /> محجوز</span></div><div className="bus-layout"><div className="driver"><BusFront size={19} /> السائق</div><div className="seats-grid">{['A1', 'A2', 'A3', 'A4', 'B1', 'B2', 'B3', 'B4', 'C1', 'C2', 'C3', 'C4', 'D1', 'D2', 'D3', 'D4'].map((item, index) => <button key={item} className={`seat ${item === seat ? 'selected' : ''} ${[1, 6, 11].includes(index) ? 'taken' : ''}`} disabled={[1, 6, 11].includes(index)} onClick={() => setSeat(item)}>{item}</button>)}</div></div><label className="terms"><input type="checkbox" checked={terms} onChange={(event) => setTerms(event.target.checked)} /> أوافق على <a href="#terms">شروط الحجز وسياسة الإلغاء</a></label></div></section><aside className="summary"><h3>ملخص الرحلة</h3><div className="summary-route"><span><b>{from}</b><small>{trip.time}</small></span><div><i /><BusFront size={17} /><i /></div><span><b>{to}</b><small>{trip.arrival}</small></span></div><dl><div><dt>الشركة</dt><dd>{trip.company}</dd></div><div><dt>المقعد</dt><dd>{seat}</dd></div><div><dt>السعر</dt><dd>{trip.price} ل.س</dd></div></dl>{error && <p className="api-state error-state">{error}</p>}<button className="btn btn-primary full" disabled={!terms || loading} onClick={() => void confirm()}>{loading ? 'جاري التأكيد…' : 'تأكيد الحجز'} {!loading && <ArrowLeft size={16} />}</button><small className="secure"><ShieldCheck size={14} /> بياناتك محمية وآمنة</small></aside></div></div>
+}
