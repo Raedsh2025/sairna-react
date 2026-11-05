@@ -1,9 +1,10 @@
-export type View = 'home' | 'results' | 'booking' | 'tracking' | 'auth' | 'admin-login'
+export type View = 'home' | 'results' | 'booking' | 'companies' | 'tracking' | 'auth' | 'admin-login'
 
 export type Trip = {
   id: string
   backendId?: number
   company: string
+  companyId?: number | string
   logo: string
   time: string
   arrival: string
@@ -46,6 +47,16 @@ export type BookingResponse = {
 }
 
 export type City = { id: number; name: string; latitude?: number; longitude?: number }
+export type Company = {
+  id: number | string
+  name: string
+  logoUrl?: string | null
+  isActive?: boolean
+  rating?: string | number
+  tag?: string
+  features?: string[]
+  about?: string
+}
 
 export type AuthResponse = { token: string; user?: { id: number; name: string; email: string } }
 

@@ -11,6 +11,7 @@ import { Home } from './pages/Home'
 import { Results } from './pages/Results'
 import { Tracking } from './pages/Tracking'
 import { AdminAuth } from './pages/AdminAuth'
+import { Companies } from './pages/Companies'
 import { useCities } from './hooks/useCities'
 import { useAppStore } from './store/appStore'
 import { trips, type View } from './types/data'
@@ -35,7 +36,7 @@ function App() {
   const originId = cities.find((city) => city.name === from)?.id
   const destinationId = cities.find((city) => city.name === to)?.id
   const commonProps = { from, to, date, setFrom, setTo, setDate, swap, navigate }
-  return <div className="app-root motion-safe:animate-fade-in">{view !== 'admin-login' && <SiteHeader view={view} dark={dark} onTheme={() => setDark(!dark)} navigate={navigate} />}<main><Routes><Route path={viewPaths.home} element={<Home {...{ onSearch: search }} {...commonProps} cityOptions={cityNames} />} /><Route path={viewPaths.results} element={<Results {...{ originId, destinationId, onSearch: search, onBook: book }} {...commonProps} cityOptions={cityNames} />} /><Route path={viewPaths.booking} element={<Booking trip={selectedTrip ?? trips[0]} {...{ notify }} {...commonProps} />} /><Route path={viewPaths.tracking} element={<Tracking notify={notify} />} /><Route path={viewPaths.auth} element={<Auth {...{ notify, navigate }} />} /><Route path={viewPaths['admin-login']} element={<AdminAuth {...{ notify, navigate }} />} /><Route path="*" element={<Navigate to="/" replace />} /></Routes></main>{view !== 'auth' && view !== 'admin-login' && <SiteFooter navigate={navigate} />}{toast && <div className="toast motion-safe:animate-pop"><Check size={17} /> {toast}</div>}</div>
+  return <div className="app-root motion-safe:animate-fade-in">{view !== 'admin-login' && <SiteHeader view={view} dark={dark} onTheme={() => setDark(!dark)} navigate={navigate} />}<main><Routes><Route path={viewPaths.home} element={<Home {...{ onSearch: search }} {...commonProps} cityOptions={cityNames} />} /><Route path={viewPaths.results} element={<Results {...{ originId, destinationId, onSearch: search, onBook: book }} {...commonProps} cityOptions={cityNames} />} /><Route path={viewPaths.booking} element={<Booking trip={selectedTrip ?? trips[0]} {...{ notify }} {...commonProps} />} /><Route path={viewPaths.companies} element={<Companies />} /><Route path={viewPaths.tracking} element={<Tracking notify={notify} />} /><Route path={viewPaths.auth} element={<Auth {...{ notify, navigate }} />} /><Route path={viewPaths['admin-login']} element={<AdminAuth {...{ notify, navigate }} />} /><Route path="*" element={<Navigate to="/" replace />} /></Routes></main>{view !== 'auth' && view !== 'admin-login' && <SiteFooter navigate={navigate} />}{toast && <div className="toast motion-safe:animate-pop"><Check size={17} /> {toast}</div>}</div>
 }
 
 export default App

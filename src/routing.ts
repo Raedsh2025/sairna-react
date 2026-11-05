@@ -4,6 +4,7 @@ export const viewPaths: Record<View, string> = {
   home: '/',
   results: '/results',
   booking: '/booking',
+  companies: '/companies',
   tracking: '/tracking',
   auth: '/auth',
   'admin-login': '/admin-login',
