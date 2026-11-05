@@ -1,31 +1,24 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { ArrowLeft, Eye, EyeOff, ShieldCheck } from 'lucide-react'
-import { dashboardLogin } from '../api/dashboard'
+import { useAdminAuth } from '../hooks/useAdminAuth'
 import type { View } from '../types/data'
 
 export function AdminAuth({ notify, navigate }: { notify: (message: string) => void; navigate: (view: View) => void }) {
   const [showPassword, setShowPassword] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const { submit: authenticateAdmin, loading, error } = useAdminAuth()
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    setLoading(true)
-    setError(null)
     const form = new FormData(event.currentTarget)
     const email = String(form.get('email') ?? '')
     const password = String(form.get('password') ?? '')
 
     try {
-      await dashboardLogin(email, password)
+      await authenticateAdmin(email, password)
       notify('تم تسجيل دخول الإدارة بنجاح')
       navigate('home')
-    } catch (reason) {
-      setError(reason instanceof Error ? reason.message : 'تعذر تسجيل دخول الإدارة')
-    } finally {
-      setLoading(false)
-    }
+    } catch { return }
   }
 
   return (
