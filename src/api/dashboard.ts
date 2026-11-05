@@ -1,6 +1,9 @@
 import { ApiError } from './client'
 
-const BASE_URL = (import.meta.env.VITE_DASHBOARD_API_BASE_URL as string | undefined)?.replace(/\/$/, '')
+const BASE_URL = (
+  (import.meta.env.VITE_DASHBOARD_API_BASE_URL as string | undefined)
+    || 'https://sairna.abdulrahman-hares.com/api/v1/dashboard'
+).replace(/\/$/, '')
 const TOKEN_KEY = 'sairna-dashboard-token'
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
@@ -16,8 +19,8 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 }
 
 export async function dashboardLogin(email: string, password: string): Promise<{ token: string }> {
-  const result = await request<{ token?: string; accessToken?: string }>('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) })
-  const token = result.token || result.accessToken || ''
+  const result = await request<{ token?: string; accessToken?: string; data?: { token?: string; accessToken?: string } }>('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) })
+  const token = result.token || result.accessToken || result.data?.token || result.data?.accessToken || ''
   if (!token) throw new ApiError('لم يُرجع الخادم رمز دخول صالحًا')
   localStorage.setItem(TOKEN_KEY, token)
   return { token }
