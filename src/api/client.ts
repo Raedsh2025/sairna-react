@@ -1,4 +1,4 @@
-import type { AuthResponse, BookingRequest, BookingResponse, City, SearchParams, TrackingResult, Trip } from '../types/data'
+import type { AuthResponse, BookingRequest, BookingResponse, City, Company, SearchParams, TrackingResult, Trip } from '../types/data'
 import { mockTracking, trips as mockTrips } from '../types/data'
 
 const API_BASE_URL = (import.meta.env.VITE_WEBSITE_API_BASE_URL as string | undefined)?.replace(/\/$/, '') ||
@@ -82,6 +82,11 @@ export async function authenticate(payload: { email: string; password: string; n
 export async function getCities(): Promise<City[]> {
   if (!API_BASE_URL) return mockDelay(['دمشق', 'حلب', 'حمص', 'اللاذقية', 'طرطوس', 'حماة'].map((name, id) => ({ id: id + 1, name })))
   return request<City[]>('/cities')
+}
+
+export async function getCompanies(): Promise<Company[]> {
+  if (!API_BASE_URL) return mockDelay([])
+  return request<Company[]>('/companies')
 }
 
 export async function getMyBookings(): Promise<unknown[]> {

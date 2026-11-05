@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { ArrowLeft, Eye, EyeOff, ShieldCheck } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { useAdminAuth } from '../hooks/useAdminAuth'
 import type { View } from '../types/data'
 
@@ -32,13 +33,13 @@ export function AdminAuth({ notify, navigate }: { notify: (message: string) => v
       </div>
 
       <div className="auth-form">
-        <a className="brand" href="#home">
+        <Link className="brand" to="/">
           <span className="brand-mark"><img src="/assets/logo.svg" alt="" /></span>
           <span>
             <strong>سيرنا<span>.</span></strong>
             <small>دخول آمن للوحة الإدارة</small>
           </span>
-        </a>
+        </Link>
 
         <div className="auth-heading">
           <h1>دخول الإدارة</h1>
