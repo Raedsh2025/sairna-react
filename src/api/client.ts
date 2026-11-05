@@ -3,6 +3,7 @@ import { mockTracking, trips as mockTrips } from '../types/data'
 
 const API_BASE_URL = (import.meta.env.VITE_WEBSITE_API_BASE_URL as string | undefined)?.replace(/\/$/, '') ||
   (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/$/, '')
+const DEFAULT_WEBSITE_API_BASE_URL = 'https://sairna.abdulrahman-hares.com/api/v1/website'
 const TOKEN_KEY = 'sairna-website-token'
 
 export class ApiError extends Error {
@@ -17,8 +18,12 @@ export class ApiError extends Error {
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   if (!API_BASE_URL) throw new ApiError('API base URL is not configured')
+  return requestAtBase<T>(API_BASE_URL, path, options)
+}
+
+async function requestAtBase<T>(baseUrl: string, path: string, options?: RequestInit): Promise<T> {
   const token = localStorage.getItem(TOKEN_KEY)
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await fetch(`${baseUrl}${path}`, {
     ...options,
     headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}), ...options?.headers },
   })
@@ -85,8 +90,15 @@ export async function getCities(): Promise<City[]> {
 }
 
 export async function getCompanies(): Promise<Company[]> {
-  if (!API_BASE_URL) return mockDelay([])
-  return request<Company[]>('/companies')
+  const companies = API_BASE_URL
+    ? await request<Company[]>('/companies')
+    : await requestAtBase<Company[]>(DEFAULT_WEBSITE_API_BASE_URL, '/companies')
+  return companies
+    .filter((company) => company.isActive !== false)
+    .map((company) => ({
+      ...company,
+      name: company.name.trim(),
+    }))
 }
 
 export async function getMyBookings(): Promise<unknown[]> {
