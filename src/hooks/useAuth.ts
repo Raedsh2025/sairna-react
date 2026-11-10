@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { authenticate } from '../api/client'
+import { authenticate, getCurrentUser } from '../api/client'
 import { useAppStore } from '../store/appStore'
 
 export function useAuth() {
@@ -13,8 +13,9 @@ export function useAuth() {
     setError(null)
     try {
       const result = await authenticate(payload)
+      const user = result.user ?? await getCurrentUser().catch(() => undefined)
       setAuthenticated(true)
-      setUserName(result.user?.name || payload.name || payload.email.split('@')[0] || 'المستخدم')
+      setUserName(user?.name || payload.name || payload.email.split('@')[0] || 'المستخدم')
       return result
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : 'تعذر إتمام العملية')

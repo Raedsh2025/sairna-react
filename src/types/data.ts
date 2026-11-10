@@ -58,7 +58,8 @@ export type Company = {
   about?: string
 }
 
-export type AuthResponse = { token: string; user?: { id: number; name: string; email: string } }
+export type AuthUser = { id: number; name: string; email: string; role?: string }
+export type AuthResponse = { token: string; user?: AuthUser }
 
 export function hashToView(hash: string): View {
   const value = hash.replace('#', '')

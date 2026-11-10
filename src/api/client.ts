@@ -1,5 +1,6 @@
 import type {
   AuthResponse,
+  AuthUser,
   BookingRequest,
   BookingResponse,
   City,
@@ -133,6 +134,10 @@ export async function authenticate(payload: {
   if (!token) throw new ApiError("لم يُرجع الخادم رمز دخول صالحًا");
   localStorage.setItem(WEBSITE_TOKEN_KEY, token);
   return { token, user: result.user };
+}
+
+export async function getCurrentUser(): Promise<AuthUser> {
+  return request<AuthUser>("/auth/me");
 }
 
 export async function getCities(): Promise<City[]> {

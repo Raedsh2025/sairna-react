@@ -18,6 +18,7 @@ import { Results } from "./pages/Results";
 import { Tracking } from "./pages/Tracking";
 import { AdminAuth } from "./pages/AdminAuth";
 import { Companies } from "./pages/Companies";
+import { getCurrentUser, WEBSITE_TOKEN_KEY } from "./api/client";
 import { useCities } from "./hooks/useCities";
 import { useAppStore } from "./store/appStore";
 import type { Trip, View } from "./types/data";
@@ -40,6 +41,10 @@ function App() {
     selectTrip,
     notify,
     clearToast,
+    isAuthenticated,
+    userName,
+    setUserName,
+    logout,
   } = useAppStore();
   const { cities } = useCities();
   const view = pathToView(location.pathname);
@@ -60,6 +65,14 @@ function App() {
     const timer = window.setTimeout(clearToast, 2800);
     return () => window.clearTimeout(timer);
   }, [toast, clearToast]);
+  useEffect(() => {
+    if (!isAuthenticated || userName || !localStorage.getItem(WEBSITE_TOKEN_KEY)) return;
+    void getCurrentUser()
+      .then((user) => setUserName(user.name))
+      .catch((reason) => {
+        if (reason?.status === 401) logout();
+      });
+  }, [isAuthenticated, logout, setUserName, userName]);
 
   const search = (event?: FormEvent) => {
     event?.preventDefault();
