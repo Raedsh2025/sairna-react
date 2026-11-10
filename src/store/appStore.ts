@@ -11,6 +11,7 @@ type AppState = {
   selectedTrip: Trip | null
   toast: string
   isAuthenticated: boolean
+  userName: string
   setDark: (dark: boolean) => void
   setFrom: (from: string) => void
   setTo: (to: string) => void
@@ -19,6 +20,7 @@ type AppState = {
   notify: (message: string) => void
   clearToast: () => void
   setAuthenticated: (isAuthenticated: boolean) => void
+  setUserName: (userName: string) => void
   logout: () => void
 }
 
@@ -32,6 +34,7 @@ export const useAppStore = create<AppState>()(
       selectedTrip: null,
       toast: '',
       isAuthenticated: Boolean(localStorage.getItem(WEBSITE_TOKEN_KEY)),
+      userName: '',
       setDark: (dark) => set({ dark }),
       setFrom: (from) => set({ from }),
       setTo: (to) => set({ to }),
@@ -40,14 +43,15 @@ export const useAppStore = create<AppState>()(
       notify: (toast) => set({ toast }),
       clearToast: () => set({ toast: '' }),
       setAuthenticated: (isAuthenticated) => set({ isAuthenticated }),
+      setUserName: (userName) => set({ userName }),
       logout: () => {
         localStorage.removeItem(WEBSITE_TOKEN_KEY)
-        set({ isAuthenticated: false })
+        set({ isAuthenticated: false, userName: '' })
       },
     }),
     {
       name: 'sairna-app-state',
-      partialize: (state) => ({ dark: state.dark }),
+      partialize: (state) => ({ dark: state.dark, userName: state.userName }),
     },
   ),
 )

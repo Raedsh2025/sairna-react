@@ -120,7 +120,7 @@ export async function authenticate(payload: {
   email: string;
   password: string;
   name?: string;
-}): Promise<{ token: string }> {
+}): Promise<{ token: string; user?: AuthResponse["user"] }> {
   const path = payload.name ? "/auth/register" : "/auth/login";
   const result = await request<AuthResponse>(path, {
     method: "POST",
@@ -132,7 +132,7 @@ export async function authenticate(payload: {
     "";
   if (!token) throw new ApiError("لم يُرجع الخادم رمز دخول صالحًا");
   localStorage.setItem(WEBSITE_TOKEN_KEY, token);
-  return { token };
+  return { token, user: result.user };
 }
 
 export async function getCities(): Promise<City[]> {
