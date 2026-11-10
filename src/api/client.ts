@@ -21,7 +21,7 @@ const API_BASE_URL =
     "",
   ) ||
   DEFAULT_WEBSITE_API_BASE_URL;
-const TOKEN_KEY = "sairna-website-token";
+export const WEBSITE_TOKEN_KEY = "sairna-website-token";
 
 export class ApiError extends Error {
   readonly status?: number;
@@ -42,7 +42,7 @@ async function requestAtBase<T>(
   path: string,
   options?: RequestInit,
 ): Promise<T> {
-  const token = localStorage.getItem(TOKEN_KEY);
+  const token = localStorage.getItem(WEBSITE_TOKEN_KEY);
   const response = await fetch(`${baseUrl}${path}`, {
     ...options,
     headers: {
@@ -131,7 +131,7 @@ export async function authenticate(payload: {
     (result as AuthResponse & { accessToken?: string }).accessToken ||
     "";
   if (!token) throw new ApiError("لم يُرجع الخادم رمز دخول صالحًا");
-  localStorage.setItem(TOKEN_KEY, token);
+  localStorage.setItem(WEBSITE_TOKEN_KEY, token);
   return { token };
 }
 
