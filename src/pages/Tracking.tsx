@@ -43,7 +43,7 @@ export function Tracking({ notify }: { notify: (message: string) => void }) {
             <input
               value={code}
               onChange={(event) => setCode(event.target.value)}
-              placeholder="أدخل رقم الرحلة"
+              placeholder="أدخل معرّف الرحلة (مثال: 58)"
             />
           </label>
           <button

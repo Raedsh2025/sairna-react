@@ -82,7 +82,11 @@ export async function createBooking(
 }
 
 export async function trackTrip(code: string): Promise<TrackingResult> {
-  const trip = await request<LiveTrip>(`/trips/${encodeURIComponent(code)}`);
+  const identifier = code.trim();
+  if (!/^\d+$/.test(identifier)) {
+    throw new ApiError("أدخل معرّف الرحلة الرقمي كما يظهر في بيانات الرحلة");
+  }
+  const trip = await request<LiveTrip>(`/trips/${identifier}`);
   const departure = new Date(trip.departureAt);
   const arrival = new Date(trip.arrivalAt);
   return {
@@ -174,6 +178,7 @@ function normalizeTrip(trip: LiveTrip): Trip {
   return {
     id: trip.code || String(trip.id),
     backendId: trip.id,
+    companyId: trip.companyId,
     company: trip.company?.name || "شركة النقل",
     logo: trip.company?.name?.slice(0, 1) || "س",
     time: departure.toLocaleTimeString("ar-SY", {
