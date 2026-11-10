@@ -52,11 +52,13 @@ async function requestAtBase<T>(
     },
   });
   const body = await response.json().catch(() => null);
-  if (!response.ok)
-    throw new ApiError(
-      body?.message || `Request failed with status ${response.status}`,
-      response.status,
-    );
+  if (!response.ok) {
+    const message =
+      body?.message === "INVALID_CREDENTIALS"
+        ? "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+        : body?.message || `Request failed with status ${response.status}`;
+    throw new ApiError(message, response.status);
+  }
   return (body?.value ?? body?.data ?? body) as T;
 }
 
@@ -124,7 +126,8 @@ export async function authenticate(payload: {
     result.token ||
     (result as AuthResponse & { accessToken?: string }).accessToken ||
     "";
-  if (token) localStorage.setItem(TOKEN_KEY, token);
+  if (!token) throw new ApiError("لم يُرجع الخادم رمز دخول صالحًا");
+  localStorage.setItem(TOKEN_KEY, token);
   return { token };
 }
 
