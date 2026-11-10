@@ -76,6 +76,10 @@ function App() {
 
   const search = (event?: FormEvent) => {
     event?.preventDefault();
+    if (!originId || !destinationId) {
+      notify("جاري تحميل المدن، حاول البحث بعد لحظات");
+      return;
+    }
     if (from === to) return notify("اختار مدينتين مختلفتين للرحلة");
     navigate("results");
   };

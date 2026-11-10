@@ -64,9 +64,14 @@ async function requestAtBase<T>(
 }
 
 export async function searchTrips(params: SearchParams): Promise<Trip[]> {
+  const originId = params.originId;
+  const destinationId = params.destinationId;
+  if (typeof originId !== "number" || !Number.isInteger(originId) || originId < 1 || typeof destinationId !== "number" || !Number.isInteger(destinationId) || destinationId < 1) {
+    throw new ApiError("اختار مدينتي الانطلاق والوصول قبل البحث عن الرحلة", 400);
+  }
   const query = new URLSearchParams({
-    originId: String(params.originId ?? params.from),
-    destinationId: String(params.destinationId ?? params.to),
+    originId: String(originId),
+    destinationId: String(destinationId),
     date: params.date,
   }).toString();
   const trips = await request<LiveTrip[]>(`/trips?${query}`);

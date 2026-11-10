@@ -9,6 +9,12 @@ export function useTrips(params: SearchParams) {
   const { from, to, date, originId, destinationId } = params
 
   const load = useCallback(async () => {
+    if (typeof originId !== 'number' || !Number.isInteger(originId) || originId < 1 || typeof destinationId !== 'number' || !Number.isInteger(destinationId) || destinationId < 1) {
+      setTrips([])
+      setError(null)
+      setLoading(false)
+      return
+    }
     setLoading(true)
     setError(null)
     try {
