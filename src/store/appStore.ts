@@ -22,8 +22,8 @@ export const useAppStore = create<AppState>()(
   persist(
     (set) => ({
       dark: false,
-      from: 'دمشق',
-      to: 'حلب',
+      from: '',
+      to: '',
       date: '2026-11-12',
       selectedTrip: null,
       toast: '',

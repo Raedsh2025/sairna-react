@@ -1,6 +1,5 @@
 import type { FormEvent } from 'react'
 import { ArrowUpDown, CalendarDays, MapPin, Navigation, Search } from 'lucide-react'
-import { cities } from '../types/data'
 
 type Props = {
   onSearch: (event?: FormEvent) => void
@@ -14,7 +13,7 @@ type Props = {
   cityOptions?: string[]
 }
 
-export function SearchForm({ onSearch, from, to, date, setFrom, setTo, setDate, swap, cityOptions = cities }: Props) {
+export function SearchForm({ onSearch, from, to, date, setFrom, setTo, setDate, swap, cityOptions = [] }: Props) {
   return <form className="search-form" onSubmit={onSearch}>
     <label className="field"><MapPin size={19} /><span>من</span><select value={from} onChange={(event) => setFrom(event.target.value)}>{cityOptions.map((city) => <option key={city}>{city}</option>)}</select></label>
     <button className="swap" type="button" onClick={swap} aria-label="تبديل المدن"><ArrowUpDown size={17} /></button>
